@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="btn_background">#3F51B5</color>
+    <color name="btn_background_deep">#303F9F</color>
+    <color name="btn_text">#f7f7f7</color>
+    <color name="item_view_background">#ffffff</color>
+    <color name="spn_text">#333333</color>
+    <color name="gv_background">#E8EAF6</color>
+    <color name="spn_background">#f5f5f5</color>
+</resources>

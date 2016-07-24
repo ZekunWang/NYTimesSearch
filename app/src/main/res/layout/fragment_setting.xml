@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/fragment_padding">
+
+    <TextView
+            android:layout_width="@dimen/setting_tv_width"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_text_begin_date"
+            android:id="@+id/textView"
+            android:textSize="@dimen/setting_tv_size"
+            android:textColor="@color/spn_text"
+            android:gravity="center_vertical|right"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/btnBeginDate"
+            android:layout_alignBottom="@+id/btnBeginDate" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_text_sort"
+            android:id="@+id/textView2"
+            android:layout_below="@+id/textView"
+            android:textSize="@dimen/setting_tv_size"
+            android:textColor="@color/spn_text"
+            android:gravity="center_vertical|right"
+            android:layout_alignTop="@+id/spnSort"
+            android:layout_alignBottom="@+id/spnSort"
+            android:layout_alignLeft="@+id/textView"
+            android:layout_alignRight="@+id/textView" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_text_news_dest"
+            android:id="@+id/textView3"
+            android:textSize="@dimen/setting_tv_size"
+            android:textColor="@color/spn_text"
+            android:gravity="center_vertical|right"
+            android:layout_alignTop="@+id/cbArt"
+            android:layout_alignLeft="@+id/textView"
+            android:layout_alignRight="@+id/textView" />
+
+    <Button
+            android:layout_width="@dimen/setting_btn_width"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/fragment_padding"
+            tools:text="01/01/2016"
+            android:id="@+id/btnBeginDate"
+            android:textSize="@dimen/setting_tv_size"
+            android:textColor="@color/spn_text"
+            android:textAllCaps="false"
+            android:background="@color/spn_background"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"  />
+
+    <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/swBeginDate"
+            android:layout_below="@id/btnBeginDate"
+            android:layout_alignRight="@id/btnBeginDate"
+            android:layout_marginTop="@dimen/fragment_padding"/>
+
+    <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spnSort"
+            android:background="@color/spn_background"
+            android:spinnerMode="dropdown"
+            android:textSize="@dimen/setting_tv_size"
+            android:layout_alignLeft="@+id/btnBeginDate"
+            android:layout_alignRight="@+id/btnBeginDate"
+            android:layout_below="@+id/swBeginDate"
+            android:layout_marginTop="@dimen/fragment_padding" />
+
+    <CheckBox
+            android:layout_width="@dimen/setting_tv_width"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_spn_art"
+            android:id="@+id/cbArt"
+            android:textSize="@dimen/setting_tv_size"
+            android:textColor="@color/spn_text"
+            android:checked="false"
+            android:layout_alignLeft="@+id/btnBeginDate"
+            android:layout_below="@+id/spnSort"
+            android:layout_marginTop="@dimen/setting_margin" />
+
+    <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_spn_Fashion"
+            android:id="@+id/cbFashion"
+            android:textSize="@dimen/setting_tv_size"
+            android:textColor="@color/spn_text"
+            android:layout_alignLeft="@+id/cbArt"
+            android:layout_below="@+id/cbArt"
+            android:checked="false" />
+
+    <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_spn_Sports"
+            android:textSize="@dimen/setting_tv_size"
+            android:textColor="@color/spn_text"
+            android:id="@+id/cbSports"
+            android:layout_alignLeft="@+id/cbArt"
+            android:layout_below="@+id/cbFashion"
+            android:checked="false" />
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/btn_height"
+            android:text="@string/setting_btn_save"
+            android:textSize="@dimen/setting_tv_size"
+            android:textAllCaps="false"
+            android:id="@+id/btnSave"
+            android:textColor="@color/btn_text"
+            android:background="@color/btn_background"
+            android:layout_below="@+id/cbSports"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/setting_margin"/>
+
+</RelativeLayout>
