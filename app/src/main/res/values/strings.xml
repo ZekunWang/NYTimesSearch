@@ -7,7 +7,7 @@
     <string name="action_search">Search</string>
     <string name="hint">Enter search query</string>
     <string name="button_search">Search</string>
-    <string name="title_activity_article">ArticleActivity</string>
+    <string name="title_activity_article">Article</string>
     <string name="title_activity_setting">SettingActivity</string>
     <string name="setting_text_begin_date">Begin Date</string>
     <string name="setting_text_sort">Sort Order</string>

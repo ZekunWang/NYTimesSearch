@@ -2,15 +2,10 @@ package com.zekunwang.nytimessearch.models;
 
 import com.loopj.android.http.RequestParams;
 
-import android.util.Log;
+import org.parceler.Parcel;
 
-import java.io.Serializable;
-import java.util.HashMap;
-
-/**
- * Created by zwang_000 on 7/21/2016.
- */
-public class Setting implements Serializable {
+@Parcel
+public class Setting {
     public Date beginDate;
     public int sort;
     public boolean art;
@@ -37,8 +32,26 @@ public class Setting implements Serializable {
         if (sort != 0) {
             param.put("sort", (sort == 1 ? "newest" : "oldest"));    // set sort query
         }
-        // add art fashion and sport
-        Log.i("DEBUG", "no art, fashion, sports yet");
+        if (art || fashion || sports) {
+            StringBuilder sb = new StringBuilder("news_desk:(");
+            if (art) {
+                sb.append("\"Arts\"");
+            }
+            if (fashion) {
+                if (sb.length() > 11) {
+                    sb.append(',');
+                }
+                sb.append("\"Fashion & Style\"");
+            }
+            if (sports) {
+                if (sb.length() > 11) {
+                    sb.append(',');
+                }
+                sb.append("\"Sports\"");
+            }
+            sb.append(')');
+            param.put("fq", sb.toString());
+        }
         return param;
     }
 }

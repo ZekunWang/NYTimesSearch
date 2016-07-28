@@ -1,51 +1,41 @@
 package com.zekunwang.nytimessearch;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import com.zekunwang.nytimessearch.fragments.SettingDialogFragment;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.zekunwang.nytimessearch.adapters.ArticleArrayAdapter;
+import com.zekunwang.nytimessearch.activities.ArticleActivity;
+import com.zekunwang.nytimessearch.adapters.ContactsAdapter;
+import com.zekunwang.nytimessearch.listeners.EndlessRecyclerViewScrollListener;
 import com.zekunwang.nytimessearch.models.Article;
 import com.zekunwang.nytimessearch.models.Setting;
+import com.zekunwang.nytimessearch.models.SpacesItemDecoration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
 import java.util.ArrayList;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
+import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 
 
@@ -54,32 +44,44 @@ public class SearchActivity extends AppCompatActivity implements
 
     // NYTimes API: 1fca3fa8b1c647ec80f7f0a27fc050c1
     // http://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=1fca3fa8b1c647ec80f7f0a27fc050c1
-    @BindView(R.id.gvResults) GridView gvResults;
+    @BindView(R.id.rvResults) RecyclerView rvResults;
     ArrayList<Article> articles;
-    ArticleArrayAdapter adapter;
+    ContactsAdapter adapter;
+    StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     Setting setting;
-    final String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
+    final String URL = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
+    final String API_KEY = "1fca3fa8b1c647ec80f7f0a27fc050c1";
     RequestParams params;
+    final int TAP_THRESHOLD = 4000;
+    long timeStamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        // set color for notification bar
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(getResources().getColor(R.color.btn_background_deep));
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
+
         setupViews();
 
         // load sharedPreference
         setting = new Setting();
         // check internet connection
-        if (!isNetworkAvailable() || !isOnline()) {
+        if (!HelperMethods.isNetworkAvailable(this) || !HelperMethods.isOnline()) {
             Toast.makeText(this, "Internet Unavailable...", Toast.LENGTH_LONG).show();
         }
+    }
+    // double tap to scroll to top
+    @OnClick(R.id.toolbar)
+    public void onClick(View v) {
+        long newTimeStamp = System.currentTimeMillis();
+        if (newTimeStamp - timeStamp <= TAP_THRESHOLD && articles.size() != 0) {
+            mStaggeredGridLayoutManager.scrollToPositionWithOffset(0, 0);
+        }
+        timeStamp = newTimeStamp;
     }
 
     private void setupViews() {
@@ -87,20 +89,28 @@ public class SearchActivity extends AppCompatActivity implements
 
         // get width of current metric
         DisplayMetrics metrics = getResources().getDisplayMetrics();
-        double width = metrics.widthPixels * (1 - 4 * ArticleArrayAdapter.RATIO);
-        int spacing = (int)(width / 5);   // width / height = 0.66279
+        double width = metrics.widthPixels * (1 - 4 * ContactsAdapter.RATIO);
+        int spacing = (int)(width / 5) / 2;   // width / height = 0.66279
         // set vertical spacing and grid view padding dynamically
-        gvResults.setPadding(spacing, spacing, 0, spacing);
-        gvResults.setVerticalSpacing(spacing);
-        adapter = new ArticleArrayAdapter(this, articles);
-        gvResults.setAdapter(adapter);
-    }
-
-    @OnItemClick(R.id.gvResults)
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getApplicationContext(), ArticleActivity.class);
-        intent.putExtra("article", articles.get(position));
-        startActivity(intent);
+        rvResults.setPadding(spacing, spacing, spacing, spacing);
+        adapter = new ContactsAdapter(this, articles);
+        adapter.setOnItemClickListener(new ContactsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                // get position from RecyclerView and switch activity
+                Intent intent = new Intent(getApplicationContext(), ArticleActivity.class);
+                intent.putExtra("article", articles.get(position));
+                startActivity(intent);
+            }
+        });
+        rvResults.setAdapter(adapter);
+        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
+        rvResults.setLayoutManager(mStaggeredGridLayoutManager);
+        // set RecycleView item divider width
+        SpacesItemDecoration decoration = new SpacesItemDecoration(spacing);
+        rvResults.addItemDecoration(decoration);
+        // set animation
+        //rvResults.setItemAnimator(new SlideInUpAnimator());
     }
 
     @Override
@@ -150,29 +160,24 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
     public void onArticleSearch(final String query) {
-        if (!isNetworkAvailable() || !isOnline()) {
+        if (!HelperMethods.isNetworkAvailable(this) || !HelperMethods.isOnline()) {
             Toast.makeText(this, "Internet Unavailable...", Toast.LENGTH_LONG).show();
             return;
         }
         adapter.clear();    // clear adapter data and start new search
         if (query == null || query.length() == 0) {
-            gvResults.setOnScrollListener(null);
+            rvResults.addOnScrollListener(null);
         } else {
             // update query params
             params = setting.getQuery();
-            params.put("api-key", "1fca3fa8b1c647ec80f7f0a27fc050c1");
+            params.put("api-key", API_KEY);
             params.put("q", query); // search key words
 
             loadPage(0);
-            gvResults.setOnScrollListener(new EndlessScrollListener() {
+            rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(mStaggeredGridLayoutManager) {
                 @Override
-                public boolean onLoadMore(int page, int totalItemsCount) {
-                    // Triggered only when new data needs to be appended to the list
-                    // Add whatever code is needed to append new items to your AdapterView
-
+                public void onLoadMore(int page, int totalItemsCount) {
                     loadPage(page);
-                    // or customLoadMoreDataFromApi(totalItemsCount);
-                    return true; // ONLY if more data is actually being loaded; false otherwise.
                 }
             });
         }
@@ -183,7 +188,7 @@ public class SearchActivity extends AppCompatActivity implements
         params.put("page", page);
         AsyncHttpClient client = new AsyncHttpClient();
 
-        client.get(url, params, new JsonHttpResponseHandler(){
+        client.get(URL, params, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 JSONArray articleResults = null;
@@ -193,6 +198,12 @@ public class SearchActivity extends AppCompatActivity implements
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
+                    JSONArray errorResponse) {
+                Toast.makeText(getApplicationContext(), "Data request failed...", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -208,36 +219,4 @@ public class SearchActivity extends AppCompatActivity implements
         this.setting = setting;
     }
 
-    private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
-    public boolean isOnline() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public double dpToPx(double dp) {
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        double px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-        return px;
-    }
-
-    public double pxToDp(double px) {
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        double dp = Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-        return dp;
-    }
 }

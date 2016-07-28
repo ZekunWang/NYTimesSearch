@@ -1,11 +1,9 @@
 package com.zekunwang.nytimessearch.models;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
 
-/**
- * Created by zwang_000 on 7/21/2016.
- */
-public class Date implements Serializable {
+@Parcel
+public class Date {
     public int year;
     public int month;
     public int day;

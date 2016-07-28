@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ArticleActivity"
+            android:name=".activities.ArticleActivity"
             android:label="@string/title_activity_article"
             android:parentActivityName=".SearchActivity" >
             <meta-data

@@ -12,7 +12,7 @@ The following **required** functionality is completed:
 * [x] User can click on "settings" which allows selection of **advanced search options** to filter results
 * [x] User can configure advanced search filters such as:
   * [x] Begin Date (using a date picker)
-  * [ ] News desk values (Arts, Fashion & Style, Sports)
+  * [x] News desk values (Arts, Fashion & Style, Sports)
   * [x] Sort order (oldest or newest)
 * [x] Subsequent searches have any filters applied to the search results
 * [x] User can tap on any image in results to see the full text of article **full-screen**
@@ -28,12 +28,12 @@ The following **optional** features are implemented:
 
 The following **bonus** features are implemented:
 
-* [ ] Use the [RecyclerView](http://guides.codepath.com/android/Using-the-RecyclerView) with the `StaggeredGridLayoutManager` to display improve the grid of image results
-* [ ] For different news articles that only have text or only have images, use [Heterogenous Layouts](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) with RecyclerView
+* [x] Use the [RecyclerView](http://guides.codepath.com/android/Using-the-RecyclerView) with the `StaggeredGridLayoutManager` to display improve the grid of image results
+* [x] For different news articles that only have text or only have images, use [Heterogenous Layouts](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) with RecyclerView
 * [x] Apply the popular [Butterknife annotation library](http://guides.codepath.com/android/Reducing-View-Boilerplate-with-Butterknife) to reduce view boilerplate.
-* [ ] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
+* [x] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
 * [ ] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
-* [ ] Replace all icon drawables and other static image assets with [vector drawables](http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.
+* [x] Replace all icon drawables and other static image assets with [vector drawables](http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.
 * [ ] Replace Picasso with [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) for more efficient image rendering.
 * [ ] Leverage the popular [GSON library](http://guides.codepath.com/android/Using-Android-Async-Http-Client#decoding-with-gson-library) to streamline the parsing of JSON data.
 
@@ -42,12 +42,17 @@ The following **additional** features are implemented:
 * [x] Implement the ability to adjust layouts dynamically according to the device
 * [x] Improved styling of dialog fragment, actionbar and notification bar
 * [x] Implement uniform color pattern for the app
+* [x] Implement RecyclerView click effect
+* [x] Implement Toolbar to hide/show when scrolling
+* [x] Set RecyclerView back to top of list when double-tap on the Toolbar
+* [x] Implement floating action button to hide/show when scrolling
+* [x] Enable tap to view article in/out full screen on floating action button
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-![Video Walkthrough](NYTimesSearch_v1.gif)
+![Video Walkthrough](NYTimesSearch_v2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -60,6 +65,9 @@ Challenges encountered while building the app:
 3. Implement "infinite" scroll down
 4. Implement dynamic adjustment of GridView
 5. Modify styling of notification bar, action bar and dialog
+6. Set up RecyclerView adapter
+7. Set up StaggeredGridLayout
+8. Implement scrolling effect on Toolbar
 
 ## Open-source libraries used
 

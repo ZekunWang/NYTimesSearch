@@ -5,6 +5,8 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
+        // for Vector Drawable
+        vectorDrawables.useSupportLibrary = true
         applicationId "com.zekunwang.nytimessearch"
         minSdkVersion 21
         targetSdkVersion 22
@@ -19,25 +21,46 @@ android {
     }
 }
 
+// for Vector Drawable
+ext {
+    supportLibVersion = '23.4.0'  // variable that can be referenced to keep support libs consistent
+}
+
+repositories {
+    // for RecyclerView animation
+    jcenter()
+}
+// for Parceler
+apply plugin: 'com.neenbedankt.android-apt'
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // async http library, will import cz.msebera.android.httpclient.Header;
     compile 'com.loopj.android:android-async-http:1.4.9'
     // library to deal with pictures
     compile 'com.squareup.picasso:picasso:2.5.2'
-    // for using SwipeRefreshLayout
+    // for Glide
+    compile 'com.github.bumptech.glide:glide:3.5.2'
+    // for using SwipeRefreshLayout and Glide
     compile 'com.android.support:support-v4:23.1.1'
     // for using RoundedCornersTransformation
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
-    // for playing youtube videos
-    compile files('libs/YouTubeAndroidPlayerApi.jar')
-    //compile 'com.android.support:appcompat-v7:24.0.0-alpha1'
-    //compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    // for Toolbar
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile "com.android.support:design:${supportLibVersion}"
     // for using Butterknife library
     apply plugin: 'android-apt'
     compile 'com.jakewharton:butterknife:8.2.1'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
     // for RecyclerView
     compile 'com.android.support:recyclerview-v7:23.2.1'
+    // for RecyclerView animation
+    compile 'jp.wasabeef:recyclerview-animators:2.2.0'
+    // for Parceler
+    compile 'org.parceler:parceler-api:1.1.1'
+    apt 'org.parceler:parceler:1.1.1'
+    // for Vector Drawables
+    compile "com.android.support:support-vector-drawable:${supportLibVersion}" // VectorDrawableCompat
+    compile "com.android.support:animated-vector-drawable:${supportLibVersion}" // AnimatedVectorDrawableCompat
+    compile "com.android.support:support-annotations:${supportLibVersion}"  // leverage the annotations library
 }

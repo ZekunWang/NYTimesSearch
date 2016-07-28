@@ -12,6 +12,8 @@
     <dimen name="btn_padding">20dp</dimen>
     <dimen name="fragment_padding">14dp</dimen>
     <dimen name="setting_title">20sp</dimen>
-    <dimen name="gv_item_text">8sp</dimen>
+    <dimen name="gv_item_text_title">10sp</dimen>
+    <dimen name="gv_item_text_content">8sp</dimen>
     <dimen name="gv_item_text_padding">3dp</dimen>
+    <dimen name="fab_margin">10dp</dimen>
 </resources>
