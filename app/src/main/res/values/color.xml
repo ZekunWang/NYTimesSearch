@@ -3,9 +3,11 @@
     <color name="btn_background">#3F51B5</color>
     <color name="btn_background_deep">#303F9F</color>
     <color name="btn_text">#f7f7f7</color>
-    <color name="item_view_background">#ffffff</color>
-    <color name="item_view_background_pressed">#E0E0E0</color>
+    <color name="item_view_background">#FFFFFF</color>
+    <color name="item_view_background_pressed">#88B3B5B7</color>
     <color name="spn_text">#333333</color>
-    <color name="gv_background">#E8EAF6</color>
+    <color name="gv_background">#E7E9EC</color>
+    <color name="gv_background_medium">#88D3D5D8</color>
+    <color name="gv_background_deep">#44B0B2B4</color>
     <color name="spn_background">#f5f5f5</color>
 </resources>

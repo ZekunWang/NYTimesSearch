@@ -1,5 +1,9 @@
 package com.zekunwang.nytimessearch;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.zekunwang.nytimessearch.fragments.SettingDialogFragment;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -8,12 +12,17 @@ import com.zekunwang.nytimessearch.activities.ArticleActivity;
 import com.zekunwang.nytimessearch.adapters.ContactsAdapter;
 import com.zekunwang.nytimessearch.listeners.EndlessRecyclerViewScrollListener;
 import com.zekunwang.nytimessearch.models.Article;
+import com.zekunwang.nytimessearch.models.Doc;
+import com.zekunwang.nytimessearch.models.GSONModel;
+import com.zekunwang.nytimessearch.models.Response;
 import com.zekunwang.nytimessearch.models.Setting;
 import com.zekunwang.nytimessearch.models.SpacesItemDecoration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
+import org.parceler.Parcels;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +41,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,15 +54,16 @@ public class SearchActivity extends AppCompatActivity implements
 
     // NYTimes API: 1fca3fa8b1c647ec80f7f0a27fc050c1
     // http://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=1fca3fa8b1c647ec80f7f0a27fc050c1
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.rvResults) RecyclerView rvResults;
-    ArrayList<Article> articles;
+    List<Doc> docs;
     ContactsAdapter adapter;
     StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     Setting setting;
     final String URL = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
     final String API_KEY = "1fca3fa8b1c647ec80f7f0a27fc050c1";
     RequestParams params;
-    final int TAP_THRESHOLD = 4000;
+    final int TAP_THRESHOLD = 500;
     long timeStamp;
 
     @Override
@@ -60,10 +71,9 @@ public class SearchActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
 
         setupViews();
 
@@ -73,19 +83,22 @@ public class SearchActivity extends AppCompatActivity implements
         if (!HelperMethods.isNetworkAvailable(this) || !HelperMethods.isOnline()) {
             Toast.makeText(this, "Internet Unavailable...", Toast.LENGTH_LONG).show();
         }
+
+        // for testing
+        onArticleSearch("android");
     }
     // double tap to scroll to top
     @OnClick(R.id.toolbar)
     public void onClick(View v) {
         long newTimeStamp = System.currentTimeMillis();
-        if (newTimeStamp - timeStamp <= TAP_THRESHOLD && articles.size() != 0) {
+        if (newTimeStamp - timeStamp <= TAP_THRESHOLD && docs.size() != 0) {
             mStaggeredGridLayoutManager.scrollToPositionWithOffset(0, 0);
         }
         timeStamp = newTimeStamp;
     }
 
     private void setupViews() {
-        articles = new ArrayList<>();
+        docs = new ArrayList<>();
 
         // get width of current metric
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -93,13 +106,13 @@ public class SearchActivity extends AppCompatActivity implements
         int spacing = (int)(width / 5) / 2;   // width / height = 0.66279
         // set vertical spacing and grid view padding dynamically
         rvResults.setPadding(spacing, spacing, spacing, spacing);
-        adapter = new ContactsAdapter(this, articles);
+        adapter = new ContactsAdapter(this, docs);
         adapter.setOnItemClickListener(new ContactsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
                 // get position from RecyclerView and switch activity
                 Intent intent = new Intent(getApplicationContext(), ArticleActivity.class);
-                intent.putExtra("article", articles.get(position));
+                intent.putExtra("doc", Parcels.wrap(docs.get(position)));
                 startActivity(intent);
             }
         });
@@ -188,22 +201,18 @@ public class SearchActivity extends AppCompatActivity implements
         params.put("page", page);
         AsyncHttpClient client = new AsyncHttpClient();
 
-        client.get(URL, params, new JsonHttpResponseHandler(){
+        client.get(URL, params, new TextHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONArray articleResults = null;
-                try {
-                    articleResults = response.getJSONObject("response").getJSONArray("docs");
-                    adapter.addAll(Article.fromJSONArray(articleResults));  // = articles.addALl() + notification
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            public void onFailure(int statusCode, Header[] headers, String responseString,
+                    Throwable throwable) {
+                Toast.makeText(getApplicationContext(), "Data request failed...", Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                    JSONArray errorResponse) {
-                Toast.makeText(getApplicationContext(), "Data request failed...", Toast.LENGTH_LONG).show();
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder().create();
+                GSONModel gsonModel = gson.fromJson(responseString, GSONModel.class);
+                adapter.addAll(gsonModel.getResponse().getDocs());
             }
         });
     }

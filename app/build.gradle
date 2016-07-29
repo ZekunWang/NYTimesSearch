@@ -30,6 +30,7 @@ repositories {
     // for RecyclerView animation
     jcenter()
 }
+
 // for Parceler
 apply plugin: 'com.neenbedankt.android-apt'
 
@@ -37,8 +38,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // async http library, will import cz.msebera.android.httpclient.Header;
     compile 'com.loopj.android:android-async-http:1.4.9'
-    // library to deal with pictures
-    compile 'com.squareup.picasso:picasso:2.5.2'
     // for Glide
     compile 'com.github.bumptech.glide:glide:3.5.2'
     // for using SwipeRefreshLayout and Glide
@@ -63,4 +62,8 @@ dependencies {
     compile "com.android.support:support-vector-drawable:${supportLibVersion}" // VectorDrawableCompat
     compile "com.android.support:animated-vector-drawable:${supportLibVersion}" // AnimatedVectorDrawableCompat
     compile "com.android.support:support-annotations:${supportLibVersion}"  // leverage the annotations library
+    // for GSON library
+    compile 'com.google.code.gson:gson:2.6.2'
+    // for GSON model annotation
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 }
