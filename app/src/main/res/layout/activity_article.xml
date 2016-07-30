@@ -46,26 +46,4 @@
         android:layout_gravity="end|bottom"
         app:layout_behavior="com.zekunwang.nytimessearch.FABScrollBehavior"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="85dp"
-        android:id="@+id/zoomOut"
-        android:src="@drawable/ic_minus"
-        android:layout_gravity="top|end"
-        app:layout_anchor="@id/fab"
-        app:layout_anchorGravity="top"
-        app:layout_behavior="com.zekunwang.nytimessearch.FABScrollBehavior"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="155dp"
-        android:id="@+id/zoomIn"
-        android:src="@drawable/ic_plus"
-        android:layout_gravity="top|end"
-        app:layout_anchor="@id/zoomOut"
-        app:layout_anchorGravity="top"
-        app:layout_behavior="com.zekunwang.nytimessearch.FABScrollBehavior"/>
-
 </android.support.design.widget.CoordinatorLayout>

@@ -1,37 +1,57 @@
 package com.zekunwang.nytimessearch.activities;
 
-import android.app.Activity;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.zekunwang.nytimessearch.HelperMethods;
 import com.zekunwang.nytimessearch.R;
+import com.zekunwang.nytimessearch.SearchActivity;
+import com.zekunwang.nytimessearch.adapters.ContactsAdapter;
+import com.zekunwang.nytimessearch.listeners.EndlessRecyclerViewScrollListener;
 import com.zekunwang.nytimessearch.models.Article;
+import com.zekunwang.nytimessearch.models.Byline;
 import com.zekunwang.nytimessearch.models.Doc;
+import com.zekunwang.nytimessearch.models.SpacesItemDecoration;
 
 import org.parceler.Parcels;
+
+import java.io.StringBufferInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
+import cz.msebera.android.httpclient.Header;
 
 
 public class ArticleActivity extends AppCompatActivity {
@@ -39,10 +59,15 @@ public class ArticleActivity extends AppCompatActivity {
     @BindView(R.id.wvArticle) WebView webView;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
-    NestedScrollView nestedScrollView;
+    @BindView(R.id.nestedScrollView) NestedScrollView nestedScrollView;
+
+    Article article;
+    LinearLayoutManager mLinearLayoutManager;
+    StaggeredGridLayoutManager mStaggeredGridLayoutManager;
+    BottomSheetBehavior behavior;
+    RequestParams params;
+
     ActionBar actionBar;
-    final float SCALE_RATE = 1.2f;
-    float scaleX, scaleY;
     final int TAP_THRESHOLD = 500;
     long timeStamp;
 
@@ -58,7 +83,8 @@ public class ArticleActivity extends AppCompatActivity {
         // add navigation up button
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Doc doc = Parcels.unwrap(getIntent().getParcelableExtra("doc"));
+        article = Parcels.unwrap(getIntent().getParcelableExtra("article"));
+
         // avoid popping a new activity for the link
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -68,18 +94,16 @@ public class ArticleActivity extends AppCompatActivity {
             }
         });
 
-        if (doc.getWebUrl() != null) {
-            webView.loadUrl(doc.getWebUrl());
-        }
-        nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
+        if (article.webUrl != null) {
+            webView.loadUrl(article.webUrl);
 
-        // get default scale
-        scaleX = nestedScrollView.getScaleX();
-        scaleY = nestedScrollView.getScaleY();
+            webView.getSettings().setBuiltInZoomControls(true);
+            webView.getSettings().setSupportZoom(true);
+        }
     }
 
     // in/out fullscreen
-    @OnClick({R.id.fab, R.id.zoomIn, R.id.zoomOut, R.id.toolbar})
+    @OnClick({R.id.fab, R.id.toolbar})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
@@ -93,18 +117,6 @@ public class ArticleActivity extends AppCompatActivity {
                     actionBar.show();
                     fab.setImageResource(R.drawable.ic_fullscreen);
                 }
-                break;
-            case R.id.zoomIn:
-                scaleX *= SCALE_RATE;
-                scaleY *= SCALE_RATE;
-                webView.setScaleX(scaleX);
-                webView.setScaleY(scaleY);
-                break;
-            case R.id.zoomOut:
-                scaleX /= SCALE_RATE;
-                scaleY /= SCALE_RATE;
-                webView.setScaleX(scaleX);
-                webView.setScaleY(scaleY);
                 break;
             case R.id.toolbar:
                 long newTimeStamp = System.currentTimeMillis();

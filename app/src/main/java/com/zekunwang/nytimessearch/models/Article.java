@@ -3,22 +3,20 @@ package com.zekunwang.nytimessearch.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
-import android.util.Log;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Created by zwang_000 on 7/17/2016.
- */
-public class Article implements Serializable {
+@Parcel
+public class Article {
 
-    String webUrl;
-    String headLine;
-    String thumbNail;
-    String snippet;
+    public String webUrl;
+    public String headLine;
+    public String thumbNail;
+    public String snippet;
+
+    public Article() {}
 
     public static ArrayList<Article> fromJSONArray(JSONArray jsonArray) {
         ArrayList<Article> results = new ArrayList<>();
@@ -46,21 +44,5 @@ public class Article implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getWebUrl() {
-        return webUrl;
-    }
-
-    public String getHeadLine() {
-        return headLine;
-    }
-
-    public String getThumbNail() {
-        return thumbNail;
-    }
-
-    public String getSnippet() {
-        return snippet;
     }
 }

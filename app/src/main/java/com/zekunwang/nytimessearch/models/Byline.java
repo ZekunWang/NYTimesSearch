@@ -1,6 +1,8 @@
 
 package com.zekunwang.nytimessearch.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,13 +11,13 @@ import org.parceler.Parcel;
 
 @Parcel
 @Generated("org.jsonschema2pojo")
-public class Headline {
+public class Byline {
 
-    @SerializedName("main")
+    @SerializedName("organization")
     @Expose
-    public String main;
-    @SerializedName("kicker")
+    public String organization;
+    @SerializedName("original")
     @Expose
-    public String kicker;
+    public String original;
 
 }

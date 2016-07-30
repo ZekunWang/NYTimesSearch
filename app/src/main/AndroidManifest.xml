@@ -23,6 +23,7 @@
         </activity>
         <activity
             android:name=".activities.ArticleActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_article"
             android:parentActivityName=".SearchActivity" >
             <meta-data

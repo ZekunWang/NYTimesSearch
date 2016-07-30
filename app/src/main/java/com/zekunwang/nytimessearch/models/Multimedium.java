@@ -14,25 +14,26 @@ public class Multimedium {
     @SerializedName("url")
     @Expose
     public String url;
-
-    public Multimedium() {}
-
-    /**
-     * 
-     * @return
-     *     The url
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    /**
-     * 
-     * @param url
-     *     The url
-     */
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    @SerializedName("format")
+    @Expose
+    public String format;
+    @SerializedName("height")
+    @Expose
+    public int height;
+    @SerializedName("width")
+    @Expose
+    public int width;
+    @SerializedName("type")
+    @Expose
+    public String type;
+    @SerializedName("subtype")
+    @Expose
+    public String subtype;
+    @SerializedName("caption")
+    @Expose
+    public String caption;
+    @SerializedName("copyright")
+    @Expose
+    public String copyright;
 
 }

@@ -66,4 +66,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     // for GSON model annotation
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    // for retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 }

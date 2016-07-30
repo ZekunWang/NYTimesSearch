@@ -4,6 +4,10 @@ import com.loopj.android.http.RequestParams;
 
 import org.parceler.Parcel;
 
+import android.util.Log;
+
+import java.util.HashMap;
+
 @Parcel
 public class Setting {
     public Date beginDate;
@@ -25,7 +29,7 @@ public class Setting {
     }
 
     public RequestParams getQuery() {
-        RequestParams param = new RequestParams();
+        RequestParams param = new RequestParams();;
         if (beginDate.year != 0) {
             param.put("begin_date", beginDate.toQuery());  // set begin date query
         }

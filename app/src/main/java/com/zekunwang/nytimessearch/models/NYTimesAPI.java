@@ -5,17 +5,11 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.parceler.Parcel;
-
-@Parcel
 @Generated("org.jsonschema2pojo")
-public class Headline {
+public class NYTimesAPI {
 
-    @SerializedName("main")
+    @SerializedName("response")
     @Expose
-    public String main;
-    @SerializedName("kicker")
-    @Expose
-    public String kicker;
+    public Response response;
 
 }

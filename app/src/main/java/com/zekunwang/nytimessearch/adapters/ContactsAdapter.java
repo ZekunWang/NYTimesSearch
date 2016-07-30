@@ -1,7 +1,6 @@
     package com.zekunwang.nytimessearch.adapters;
 
 import com.bumptech.glide.Glide;
-import com.zekunwang.nytimessearch.HelperMethods;
 import com.zekunwang.nytimessearch.R;
 import com.zekunwang.nytimessearch.models.Article;
 import com.zekunwang.nytimessearch.models.Doc;
@@ -17,13 +16,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // Store a member variable for the contacts
-    private List<Doc> contacts;
+    private List<Article> contacts;
     // Store the context for easy access
     private Context context;
     // Define listener member variable
@@ -54,7 +54,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     // Pass in the contact array into the constructor
-    public ContactsAdapter(Context context, List<Doc> contacts) {
+    public ContactsAdapter(Context context, List<Article> contacts) {
         this.contacts = contacts;
         this.context = context;
     }
@@ -67,7 +67,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        if (contacts.get(position).getMultimedia().size() != 0) {
+        if (contacts.get(position).thumbNail != null) {
             return PIC;
         }
         return TXT;
@@ -93,26 +93,20 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         // get data item for position
-        Doc contact = contacts.get(position);
+        Article contact = contacts.get(position);
         // set data
         if (viewHolder.getItemViewType() == PIC) {
             ViewHolderWithPic viewHolderWithPic = (ViewHolderWithPic) viewHolder;
-            viewHolderWithPic.getTvTitle().setText(contact.getHeadline().getMain());
+            viewHolderWithPic.getTvTitle().setText(contact.headLine);
 
-            if (contact.imgUrl == null) {
-                List<Multimedium> multimeidia = contact.getMultimedia();
-                Multimedium multimedium = multimeidia.get(new Random().nextInt(multimeidia.size()));
-                contact.imgUrl = "http://www.nytimes.com/" + multimedium.getUrl();
-            }
-
-            Glide.with(getContext()).load(contact.imgUrl)
+            Glide.with(getContext()).load(contact.thumbNail)
                     .override((int) width, height)
                     .into(viewHolderWithPic.getIvImage());
         } else {
             ViewHolderWithoutPic viewHolderWithoutPic = (ViewHolderWithoutPic) viewHolder;
             viewHolderWithoutPic.getTvTitle().setWidth((int) width);
-            viewHolderWithoutPic.getTvTitle().setText(contact.getHeadline().getMain());
-            viewHolderWithoutPic.getTvContent().setText(contact.getSnippet());
+            viewHolderWithoutPic.getTvTitle().setText(contact.headLine);
+            viewHolderWithoutPic.getTvContent().setText(contact.snippet);
         }
     }
 
@@ -127,19 +121,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Doc> list) {
-        int position = contacts.size();
-        for (Doc contact : list) {
-            add(contact, position++);
+    public void addAll(List<Article> list) {
+        if (list != null) {
+            contacts.addAll(list);
+            notifyDataSetChanged();
         }
-    }
-    public void remove(int position) {
-        contacts.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    public void add(Doc contact, int position) {
-        contacts.add(position, contact);
-        notifyItemInserted(position);
     }
 }
