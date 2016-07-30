@@ -35,8 +35,8 @@ The following **bonus** features are implemented:
 * [ ] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
 * [x] Replace all icon drawables and other static image assets with [vector drawables](http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.
 * [x] Replace Picasso with [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) for more efficient image rendering.
-* ~~[x] Leverage the popular [GSON library](http://guides.codepath.com/android/Using-Android-Async-Http-Client#decoding-with-gson-library) to streamline the parsing of JSON data.~~
-* ~~[x] Leverages the [Retrofit networking library](http://guides.codepath.com/android/Consuming-APIs-with-Retrofit) to access the New York Times API.~~
+* [x] ~~Leverage the popular [GSON library](http://guides.codepath.com/android/Using-Android-Async-Http-Client#decoding-with-gson-library) to streamline the parsing of JSON data.~~
+* [x] ~~Leverages the [Retrofit networking library](http://guides.codepath.com/android/Consuming-APIs-with-Retrofit) to access the New York Times API.~~
 
 The following **additional** features are implemented:
 
@@ -76,9 +76,9 @@ Challenges encountered while building the app:
 ## Open-source libraries used
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
-- [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
+- ~~[Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android~~
+- [Glide](https://github.com/bumptech/glide) - Image loading and caching library for Android
 - ~~[Retrofit](https://github.com/square/retrofit) - Simple asynchronous HTTP requests with GSON parsing~~
-- ~~[Glide](https://github.com/bumptech/glide) - Image loading and caching library for Android~~
 
 ## License
 
